@@ -1,0 +1,721 @@
+<!--<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аккаунт</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #00060e;
+            color: #01122a;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 350px;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .login-box img {
+            display: block;
+            margin: 0 auto 20px;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #03a9f4;
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #fff;
+            outline: none;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .input-box label {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            color: #fff;
+            pointer-events: none;
+            transition: 0.5s;
+        }
+
+        .input-box input:focus~label,
+        .input-box input:valid~label {
+            top: -20px;
+            left: 0;
+            color: #03a9f4;
+            font-size: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background: #03a9f4;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #0293d0;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .signup-link a {
+            color: #03a9f4;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .signup-link a:hover {
+            color: #0293d0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #success-message {
+        text-align: center;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        color: #fff;
+    }
+
+    #success-message img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 20px;
+    }
+
+    #success-message h2 {
+        margin-bottom: 10px;
+        font-size: 22px;
+        color: #03a9f4;
+    }
+
+    .success-message {
+        margin-bottom: 20px;
+        font-size: 16px;
+        color: #ccc;
+    }
+
+    #success-message .btn {
+        padding: 10px 20px;
+        background: #03a9f4;
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    #success-message .btn:hover {
+        background: #0293d0;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="login-form">
+            <div class="login-box">
+                <img src="img/user.png" alt="Пользователь">
+                <h2>Войти</h2>
+                <form action="#">
+                    <div class="input-box"><input type="Email" required><label>Email</label></div>
+                    <div class="input-box"><input type="Password" required><label>Password</label></div>
+                    <button type="submit" class="btn">Войти</button>
+                </form>
+                <div class="signup-link">
+                    <p>Нет аккаунта? <a href="#" onclick="toggleForms()">Регистрация</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="signup-form" class="hidden">
+            <div class="login-box">
+                <img src="img/user.png" alt="Пользователь">
+                <h2>Регистрация</h2>
+                <form id="registration-form">
+                    <div class="input-box"><input type="text" required><label>Имя</label></div>
+                    <div class="input-box"><input type="Email" required><label>Email</label></div>
+                    <div class="input-box"><input type="Password" required><label>Пароль</label></div>
+                    <div class="input-box"><input type="Password" required><label>Подтвердите пароль</label></div>
+                    <button type="button" class="btn" onclick="registerUser()">Зарегистрироваться</button>
+                </form>
+                <div class="signup-link">
+                    <p>Уже есть аккаунт? <a href="#" onclick="toggleForms()">Войти</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="success-message" class="hidden">
+            <img src="img/icon.png" alt="успешно">
+            <h2>Регистрация прошла успешно!</h2>
+            <p class="success-message">Теперь вы можете войти в систему.</p>
+            <button class="btn" onclick="backToLogin()">Войти</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleForms() {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            loginForm.classList.toggle('hidden');
+            signupForm.classList.toggle('hidden');
+        }
+
+        function registerUser() {
+            const signupForm = document.getElementById('signup-form');
+            const successMessage = document.getElementById('success-message');
+            signupForm.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+        }
+
+        function backToLogin() {
+            const successMessage = document.getElementById('success-message');
+            const loginForm = document.getElementById('login-form');
+            successMessage.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+        }
+    </script>
+</body>
+
+</html>-->
+
+<!--<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аккаунт</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #00060e;
+            color: #01122a;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 350px;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .login-box img {
+            display: block;
+            margin: 0 auto 20px;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #03a9f4;
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #fff;
+            outline: none;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .input-box label {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            color: #fff;
+            pointer-events: none;
+            transition: 0.5s;
+        }
+
+        .input-box input:focus~label,
+        .input-box input:valid~label {
+            top: -20px;
+            left: 0;
+            color: #03a9f4;
+            font-size: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background: #03a9f4;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #0293d0;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .signup-link a {
+            color: #03a9f4;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .signup-link a:hover {
+            color: #0293d0;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="login-form">
+            <div class="login-box">
+                <img src="img/user.png" alt="Пользователь">
+                <h2>Войти</h2>
+                <form>
+                    <div class="input-box">
+                        <input type="email" id="login-email" required>
+                        <label>Email</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" id="login-password" required>
+                        <label>Password</label>
+                    </div>
+                    <button type="button" class="btn" onclick="loginUser()">Войти</button>
+                </form>
+                <div class="signup-link">
+                    <p>Нет аккаунта? <a href="#" onclick="toggleForms()">Регистрация</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="signup-form" class="hidden">
+            <div class="login-box">
+                <img src="img/user.png" alt="Пользователь">
+                <h2>Регистрация</h2>
+                <form>
+                    <div class="input-box">
+                        <input type="text" id="signup-name" required>
+                        <label>Имя</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="date" id="signup-date" required>
+                        <label>Дата рождения</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="email" id="signup-email" required>
+                        <label>Email</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" id="signup-password" required>
+                        <label>Пароль</label>
+                    </div>
+                    <button type="button" class="btn" onclick="registerUser()">Зарегистрироваться</button>
+                </form>
+                <div class="signup-link">
+                    <p>Уже есть аккаунт? <a href="#" onclick="toggleForms()">Войти</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const users = [];
+
+        function toggleForms() {
+            document.getElementById('login-form').classList.toggle('hidden');
+            document.getElementById('signup-form').classList.toggle('hidden');
+        }
+
+        function registerUser() {
+            const name = document.getElementById('signup-name').value.trim();
+            const date = document.getElementById('signup-date').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value.trim();
+
+            if (!name || !date || !email || !password) {
+                alert("Барлық өрістерді толтырыңыз!");
+                return;
+            }
+
+            const userExists = users.some(user => user.email === email);
+            if (userExists) {
+                alert("Бұл email тіркелген!");
+            } else {
+                users.push({ name, date, email, password });
+                alert("Тіркелу сәтті аяқталды!");
+                toggleForms();
+            }
+        }
+
+        function loginUser() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!email || !password) {
+                alert("Барлық өрістерді толтырыңыз!");
+                return;
+            }
+
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                alert(`Қош келдіңіз, ${user.name}!`);
+            } else {
+                alert("Пайдаланушы табылмады!");
+            }
+        }
+    </script>
+</body>
+
+</html>-->
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аккаунт</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #00060e;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        position: relative;
+        width: 350px;
+        padding: 40px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .login-box h2 {
+        color: #fff;
+        margin-bottom: 20px;
+    }
+
+    .login-box img {
+        display: block;
+        margin: 0 auto 20px;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #03a9f4;
+    }
+
+    .input-box {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+    .input-box input {
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid #fff;
+        outline: none;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .input-box label {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        color: #fff;
+        pointer-events: none;
+        transition: 0.5s;
+    }
+
+    .input-box input:focus~label,
+    .input-box input:valid~label {
+        top: -20px;
+        left: 0;
+        color: #03a9f4;
+        font-size: 12px;
+    }
+
+    .btn {
+        display: inline-block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        background: #03a9f4;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        color: #fff;
+        font-size: 18px;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #0293d0;
+    }
+
+    .signup-link {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .signup-link a {
+        color: #03a9f4;
+        text-decoration: none;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    .signup-link a:hover {
+        color: #0293d0;
+    }
+
+    #success-message {
+        text-align: center;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 40px;
+        border-radius: 10px;
+        width: 350px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    #success-message img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 20px;
+    }
+
+    #success-message h2 {
+        margin-bottom: 15px;
+        font-size: 22px;
+    }
+
+    #success-message p {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #ccc;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="login-form">
+        <div class="login-box">
+            <img src="img/user.png" alt="Пользователь">
+            <h2>Войти</h2>
+            <form>
+                <div class="input-box">
+                    <input type="email" id="login-email" required>
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <input type="password" id="login-password" required>
+                    <label>Password</label>
+                </div>
+                <button type="button" class="btn" onclick="loginUser()">Войти</button>
+            </form>
+            <div class="signup-link">
+                <p>Нет аккаунта? <a href="#" onclick="toggleForms()">Регистрация</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="signup-form" class="hidden">
+        <div class="login-box">
+            <img src="img/user.png" alt="Пользователь">
+            <h2>Регистрация</h2>
+            <form>
+                <div class="input-box">
+                    <input type="text" id="signup-name" required>
+                    <label>Имя</label>
+                </div>
+                <div class="input-box">
+                    <input type="date" id="signup-date" required>
+                    <label>Дата рождения</label>
+                </div>
+                <div class="input-box">
+                    <input type="email" id="signup-email" required>
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <input type="password" id="signup-password" required>
+                    <label>Пароль</label>
+                </div>
+                <button type="button" class="btn" onclick="registerUser()">Зарегистрироваться</button>
+            </form>
+            <div class="signup-link">
+                <p>Уже есть аккаунт? <a href="#" onclick="toggleForms()">Войти</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-message" class="hidden">
+        <img src="img/icon.png" alt="успешно">
+        <h2>Регистрация прошла успешно!</h2>
+        <p class="success-message">Теперь вы можете войти в систему.</p>
+        <button class="btn" onclick="backToLogin()">Войти</button>
+    </div>
+
+    <script>
+        const users = [];
+
+        function toggleForms() {
+            document.getElementById('login-form').classList.toggle('hidden');
+            document.getElementById('signup-form').classList.toggle('hidden');
+        }
+
+        function registerUser() {
+            const name = document.getElementById('signup-name').value.trim();
+            const date = document.getElementById('signup-date').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value.trim();
+
+            if (!name || !date || !email || !password) {
+                alert("Барлық өрістерді толтырыңыз!");
+                return;
+            }
+
+            const userExists = users.some(user => user.email === email);
+            if (userExists) {
+                alert("Бұл email тіркелген!");
+            } else {
+                users.push({ name, date, email, password });
+                document.getElementById('signup-form').classList.add('hidden');
+                document.getElementById('success-message').classList.remove('hidden');
+            }
+        }
+
+        function backToLogin() {
+            document.getElementById('success-message').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        function loginUser() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!email || !password) {
+                alert("Барлық өрістерді толтырыңыз!");
+                return;
+            }
+
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                alert(`Қош келдіңіз, ${user.name}!`);
+            } else {
+                alert("Пайдаланушы табылмады!");
+            }
+        }
+    </script>
+</body>
+
+</html>
+
